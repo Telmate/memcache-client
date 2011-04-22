@@ -242,11 +242,14 @@ class MemCache
   # Retrieves +key+ from memcache.  If +raw+ is false, the value will be
   # unmarshalled.
 
-  def get(key, raw = false)
+  def get(key, raw = false, decompress=false)
     with_server(key) do |server, cache_key|
       logger.debug { "get #{key} from #{server.inspect}" } if logger
       value = cache_get server, cache_key
       return nil if value.nil?
+      if decompress
+      	value = Zlib::GzipReader.new(StringIO.new(value)).read
+      end
       value = Marshal.load value unless raw
       return value
     end
@@ -354,7 +357,7 @@ class MemCache
 
   ONE_MB = 1024 * 1024
 
-  def set(key, value, expiry = 0, raw = false)
+  def set(key, value, expiry = 0, raw = false, compress=false)
     raise MemCacheError, "Update of readonly cache" if @readonly
 
     value = Marshal.dump value unless raw
@@ -364,7 +367,14 @@ class MemCache
       if @check_size && value.to_s.size > ONE_MB
         raise MemCacheError, "Value too large, memcached can only store 1MB of data per key"
       end
-
+      ## Zip the string value
+      if compress
+      	sio = StringIO.new
+        gz = Zlib::GzipWriter.new(sio)
+        gz.write value
+        gz.close
+      	value = sio.string 
+      end
       command = "set #{cache_key} 0 #{expiry} #{value.to_s.size}#{noreply}\r\n#{value}\r\n"
 
       with_socket_management(server) do |socket|
