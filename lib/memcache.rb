@@ -364,9 +364,6 @@ class MemCache
     with_server(key) do |server, cache_key|
       logger.debug { "set #{key} to #{server.inspect}: #{value.to_s.size}" } if logger
 
-      if @check_size && value.to_s.size > ONE_MB
-        raise MemCacheError, "Value too large, memcached can only store 1MB of data per key"
-      end
       ## Zip the string value
       if compress
       	sio = StringIO.new
@@ -375,6 +372,10 @@ class MemCache
         gz.close
       	value = sio.string 
       end
+      if @check_size && value.to_s.size > ONE_MB
+        raise MemCacheError, "Value too large, memcached can only store 1MB of data per key"
+      end
+
       command = "set #{cache_key} 0 #{expiry} #{value.to_s.size}#{noreply}\r\n#{value}\r\n"
 
       with_socket_management(server) do |socket|
