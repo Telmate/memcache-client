@@ -26,12 +26,6 @@ rescue LoadError => e
   MemCacheTimer = Timeout
 end
 
-if !''.respond_to?(:bytesize)
-  class String
-    alias_method :bytesize, :size
-  end
-end
-
 
 ##
 # A Ruby client library for memcached.
@@ -365,16 +359,16 @@ class MemCache
 
     value = Marshal.dump value unless raw
     with_server(key) do |server, cache_key|
-      logger.debug { "set #{key} to #{server.inspect}: #{value.to_s.bytesize}" } if logger
+      logger.debug { "set #{key} to #{server.inspect}: #{value.to_s.size}" } if logger
 
-      if @check_size && value.to_s.bytesize > ONE_MB
+      if @check_size && value.to_s.size > ONE_MB
         raise MemCacheError, "Value too large, memcached can only store 1MB of data per key"
       end
 
+      command = "set #{cache_key} 0 #{expiry} #{value.to_s.size}#{noreply}\r\n#{value}\r\n"
+
       with_socket_management(server) do |socket|
-        socket.write "set #{cache_key} 0 #{expiry} #{value.to_s.bytesize}#{noreply}\r\n"
-        socket.write value.to_s
-        socket.write "\r\n"
+        socket.write command
         break nil if @no_reply
         result = socket.gets
         raise_on_error_response! result
@@ -414,8 +408,8 @@ class MemCache
     value = raw ? updated : Marshal.dump(updated)
 
     with_server(key) do |server, cache_key|
-      logger.debug { "cas #{key} to #{server.inspect}: #{value.to_s.bytesize}" } if logger
-      command = "cas #{cache_key} 0 #{expiry} #{value.to_s.bytesize} #{token}#{noreply}\r\n#{value}\r\n"
+      logger.debug { "cas #{key} to #{server.inspect}: #{value.to_s.size}" } if logger
+      command = "cas #{cache_key} 0 #{expiry} #{value.to_s.size} #{token}#{noreply}\r\n#{value}\r\n"
 
       with_socket_management(server) do |socket|
         socket.write command
@@ -445,8 +439,8 @@ class MemCache
     raise MemCacheError, "Update of readonly cache" if @readonly
     value = Marshal.dump value unless raw
     with_server(key) do |server, cache_key|
-      logger.debug { "add #{key} to #{server}: #{value ? value.to_s.bytesize : 'nil'}" } if logger
-      command = "add #{cache_key} 0 #{expiry} #{value.to_s.bytesize}#{noreply}\r\n#{value}\r\n"
+      logger.debug { "add #{key} to #{server}: #{value ? value.to_s.size : 'nil'}" } if logger
+      command = "add #{cache_key} 0 #{expiry} #{value.to_s.size}#{noreply}\r\n#{value}\r\n"
 
       with_socket_management(server) do |socket|
         socket.write command
@@ -466,8 +460,8 @@ class MemCache
     raise MemCacheError, "Update of readonly cache" if @readonly
     value = Marshal.dump value unless raw
     with_server(key) do |server, cache_key|
-      logger.debug { "replace #{key} to #{server}: #{value ? value.to_s.bytesize : 'nil'}" } if logger
-      command = "replace #{cache_key} 0 #{expiry} #{value.to_s.bytesize}#{noreply}\r\n#{value}\r\n"
+      logger.debug { "replace #{key} to #{server}: #{value ? value.to_s.size : 'nil'}" } if logger
+      command = "replace #{cache_key} 0 #{expiry} #{value.to_s.size}#{noreply}\r\n#{value}\r\n"
 
       with_socket_management(server) do |socket|
         socket.write command
@@ -486,8 +480,8 @@ class MemCache
   def append(key, value)
     raise MemCacheError, "Update of readonly cache" if @readonly
     with_server(key) do |server, cache_key|
-      logger.debug { "append #{key} to #{server}: #{value ? value.to_s.bytesize : 'nil'}" } if logger
-      command = "append #{cache_key} 0 0 #{value.to_s.bytesize}#{noreply}\r\n#{value}\r\n"
+      logger.debug { "append #{key} to #{server}: #{value ? value.to_s.size : 'nil'}" } if logger
+      command = "append #{cache_key} 0 0 #{value.to_s.size}#{noreply}\r\n#{value}\r\n"
 
       with_socket_management(server) do |socket|
         socket.write command
@@ -506,8 +500,8 @@ class MemCache
   def prepend(key, value)
     raise MemCacheError, "Update of readonly cache" if @readonly
     with_server(key) do |server, cache_key|
-      logger.debug { "prepend #{key} to #{server}: #{value ? value.to_s.bytesize : 'nil'}" } if logger
-      command = "prepend #{cache_key} 0 0 #{value.to_s.bytesize}#{noreply}\r\n#{value}\r\n"
+      logger.debug { "prepend #{key} to #{server}: #{value ? value.to_s.size : 'nil'}" } if logger
+      command = "prepend #{cache_key} 0 0 #{value.to_s.size}#{noreply}\r\n#{value}\r\n"
 
       with_socket_management(server) do |socket|
         socket.write command
@@ -1152,17 +1146,7 @@ class MemCache
     end
 
     def gets
-      encode(readuntil("\n"))
-    end
-
-    if defined?(Encoding)
-      def encode(str)
-        str.force_encoding(Encoding.default_external)
-      end
-    else
-      def encode(str)
-        str
-      end
+      readuntil("\n")
     end
   end
 
