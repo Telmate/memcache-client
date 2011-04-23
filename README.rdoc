@@ -7,7 +7,7 @@ A ruby library for accessing memcached.
 
 Source:
 
-http://github.com/mperham/memcache-client
+http://github.com/earlonrails/memcache-client
 
 == Installing memcache-client
 
