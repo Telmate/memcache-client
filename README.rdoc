@@ -2,9 +2,6 @@
 
 A ruby library for accessing memcached.
 
-== memcache-client is deprecated as of August 2010.  It will be supported through 2010 but new code should use Dalli[http://github.com/mperham/dalli] instead.
-
-
 Source:
 
 http://github.com/earlonrails/memcache-client
@@ -13,7 +10,7 @@ http://github.com/earlonrails/memcache-client
 
 Just install the gem:
 
-  $ sudo gem install memcache-client
+  $ sudo gem install memcache-client --source https://github.com/earlonrails/memcache-client/
 
 == Using memcache-client
 
@@ -58,13 +55,5 @@ activate the EventMachine support like so:
 
 == Questions?
 
-memcache-client is maintained by Mike Perham and was originally written by Bob Cottrell,
-Eric Hodel and the seattle.rb crew.
-
-Email::        mailto:mperham@gmail.com
-Twitter::      mperham[http://twitter.com/mperham]
-WWW::          http://mikeperham.com
-
-If my work on memcache-client is something you support, please take a moment to
-recommend me at WWR[http://workingwithrails.com/person/10797-mike-perham].  I'm not
-asking for money, just a electronic "thumbs up".
+Email::        mailto:earlkrauss@gmail.com
+Twitter::      mperham[http://twitter.com/kevinkrauss]
