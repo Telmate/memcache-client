@@ -8,9 +8,8 @@ http://github.com/earlonrails/memcache-client
 
 == Installing memcache-client
 
-Just install the gem:
-
-  $ sudo gem install memcache-client --source https://github.com/earlonrails/memcache-client/
+Use Bundler. 
+gem 'memcache-client', '= 1.8.6', :git => 'git://github.com/earlonrails/memcache-client.git'
 
 == Using memcache-client
 
@@ -56,4 +55,4 @@ activate the EventMachine support like so:
 == Questions?
 
 Email::        mailto:earlkrauss@gmail.com
-Twitter::      mperham[http://twitter.com/kevinkrauss]
+Twitter::      kevinkrauss[http://twitter.com/kevinkrauss]
