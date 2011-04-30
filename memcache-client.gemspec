@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
   s.date = %q{2011-04-30}
   s.description = %q{A Ruby library for accessing memcached.}
   s.email = %q{mperham@gmail.com}
-  s.executables = ["memcached_top"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
