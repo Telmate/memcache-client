@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Hodel", "Robert Cottrell", "Mike Perham"]
   s.date = %q{2010-07-05}
-  s.default_executable = %q{memcached_top}
   s.description = %q{A Ruby library for accessing memcached.}
   s.email = %q{mperham@gmail.com}
   s.executables = ["memcached_top"]
