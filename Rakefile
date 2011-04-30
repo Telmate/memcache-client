@@ -13,7 +13,6 @@ begin
     s.email = "mperham@gmail.com"
     s.homepage = "http://github.com/mperham/memcache-client"
     s.authors = ['Eric Hodel', 'Robert Cottrell', 'Mike Perham']
-    s.has_rdoc = true
     s.files = FileList["[A-Z]*", "{lib,test}/**/*", 'performance.txt']
     s.test_files = FileList["test/test_*.rb"]
   end
