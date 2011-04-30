@@ -16,7 +16,6 @@ begin
     s.has_rdoc = true
     s.files = FileList["[A-Z]*", "{lib,test}/**/*", 'performance.txt']
     s.test_files = FileList["test/test_*.rb"]
-    s.executables = ['memcached_top']
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
