@@ -6,11 +6,13 @@
 Gem::Specification.new do |s|
   s.name = %q{memcache-client}
   s.version = "1.8.6"
+
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Hodel", "Robert Cottrell", "Mike Perham"]
   s.date = %q{2011-04-30}
   s.description = %q{A Ruby library for accessing memcached.}
   s.email = %q{mperham@gmail.com}
+  s.executables = ["memcached_top"]
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
