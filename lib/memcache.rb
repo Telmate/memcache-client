@@ -1,5 +1,5 @@
 # encoding: utf-8
-$TESTING = defined?($TESTING) && $TESTING
+@evented = defined?(EM) && EM.reactor_running? && RUBY_VERSION >= '1.9'
 
 require 'socket'
 require 'thread'
