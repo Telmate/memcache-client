@@ -153,7 +153,7 @@ class MemCache
       raise ArgumentError, "wrong number of arguments (#{args.length} for 2)"
     end
 
-    @evented = defined?(EM) && EM.reactor_running?
+    @evented = defined?(EM) && EM.reactor_running? && RUBY_VERSION >= '1.9'
     opts = DEFAULT_OPTIONS.merge opts
     @namespace    = opts[:namespace]
     @readonly     = opts[:readonly]
